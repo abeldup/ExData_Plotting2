@@ -22,6 +22,10 @@ makePlot1 <- function(pwd, pPNG = TRUE) {
     fetchSourceData()
     NEI <- readSourceData()
   }
+  ##Summarize the PM2.5 emissions by year
+  tby <- aggregate(NEI$Emissions, by=list(Year=NEI$year), FUN=sum, na.rm=TRUE)
+  ##Calculate a smooting spline
+  SS1 <- smooth.spline(tby$Year, tby$x, spar=0.35)
   ##Initialize the PNG device
   if (pPNG == TRUE) {
     png(filename = "plot1.png",
@@ -29,10 +33,6 @@ makePlot1 <- function(pwd, pPNG = TRUE) {
         units = "px", pointsize = 12,
         bg = "white")
   }
-  ##Summarize the PM2.5 emissions by year
-  tby <- aggregate(NEI$Emissions, by=list(Year=NEI$year), FUN=sum, na.rm=TRUE)
-  ##Calculate a smooting spline
-  SS1 <- smooth.spline(tby$Year, tby$x, spar=0.35)
   ##Now plot the results
   plot(tby, type="l", col="Blue", main="Total Emissions", 
        ylab="PM2.5 Emissions (tons)", xlab="Year", xlim=c(1998, 2010))
