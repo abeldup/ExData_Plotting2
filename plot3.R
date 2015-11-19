@@ -5,16 +5,16 @@
 ##  - Creates a subset of data for Baltimore, Maryland
 ##  - Activates the PNG output device and generates the plot
 ##  - Closes the PNG output device
-## Parameters: wd = the working directory
+## Parameters: pwd = the working directory
 ##             pPNG = generate the PNG output
 #######################################################################################################################
 
-makePlot3 <- function(wd, pPNG = TRUE) {
+makePlot3 <- function(pwd, pPNG = TRUE) {
   
   library(ggplot2)
   
-	if (!getwd() == wd) {
-		setwd(wd)
+	if (!getwd() == pwd) {
+		setwd(pwd)
 	}
 	
   ##Check if data is supplied, otherwise get it
@@ -44,4 +44,5 @@ makePlot3 <- function(wd, pPNG = TRUE) {
   if (pPNG == TRUE) {
     dev.off()  
   }
+  return(NEI)
 }

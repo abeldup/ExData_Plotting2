@@ -4,17 +4,17 @@
 ##  - Calls the function to read the data 
 ##  - Activates the PNG output device and generates the plot
 ##  - Closes the PNG output device
-## Parameters: wd = the working directory
+## Parameters: pwd = the working directory
 ##             pPNG = generate the PNG output
 #######################################################################################################################
 
-makePlot1 <- function(wd, pPNG = TRUE) {
+makePlot1 <- function(pwd, pPNG = TRUE) {
   
   library(graphics)
   library(grDevices)
   
-	if (!getwd() == wd) {
-  	setwd(wd)
+	if (!getwd() == pwd) {
+  	setwd(pwd)
 	}
 	
   ##Check if data is supplied, otherwise get it
@@ -43,4 +43,5 @@ makePlot1 <- function(wd, pPNG = TRUE) {
   if (pPNG == TRUE) {
     dev.off()  
   }
+  return(NEI)
 }
