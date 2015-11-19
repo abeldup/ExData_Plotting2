@@ -2,8 +2,8 @@
 ## Function makePlot4 performs the following 
 ##  - Calls the function to download and unzip the data
 ##  - Calls the function to read the data 
-##  - 
-##  - 
+##  - Creates a subset of data for the Combustion of Coal
+##  - Summarizes the subset by year
 ##  - Activates the PNG output device and generates the plot
 ##  - Closes the PNG output device
 ## Parameters: pwd = the working directory
@@ -40,7 +40,7 @@ makePlot4 <- function(pwd, pPNG = TRUE) {
   ##Initialize the PNG device
   if (pPNG == TRUE) {
     png(filename = "plot4.png",
-        width = 1920, height = 480, 
+        width = 480, height = 480, 
         units = "px", pointsize = 12,
         bg = "white")
   }
