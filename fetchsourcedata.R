@@ -11,7 +11,7 @@ fetchSourceData <- function() {
   fileURL <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip"
   zipfile <- "exdata-data-NEI_data.zip"
   if(!file.exists(zipfile)) {
-    download.file(fileURL, destfile = zipfile, method="curl")
+    download.file(fileURL, destfile = zipfile)
     unzip(zipfile)
   }
   

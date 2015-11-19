@@ -4,20 +4,23 @@
 ##  - Calls the function to read the data 
 ##  - Activates the PNG output device and generates the plot
 ##  - Closes the PNG output device
-## Parameters: pPNG = generate the PNG output
+## Parameters: wd = the working directory
+##             pPNG = generate the PNG output
 #######################################################################################################################
 
-makePlot1 <- function(pPNG = TRUE) {
+makePlot1 <- function(wd, pPNG = TRUE) {
   
   library(graphics)
   library(grDevices)
   
-  setwd("~/Documents/GitHub/datasciencecoursera/ExData_Plotting2")
-  
+	if (!getwd() == wd) {
+  	setwd(wd)
+	}
+	
   ##Check if data is supplied, otherwise get it
   if (is.null(NEI)) {
     fetchSourceData()
-    readSourceData()
+    NEI <- readSourceData()
   }
   ##Initialize the PNG device
   if (pPNG == TRUE) {
@@ -27,9 +30,7 @@ makePlot1 <- function(pPNG = TRUE) {
         bg = "white")
   }
   ##Summarize the PM2.5 emissions by year
-  if (is.null(tby)) {
-    tby <- aggregate(NEI$Emissions, by=list(Year=NEI$year), FUN=sum, na.rm=TRUE)
-  }
+  tby <- aggregate(NEI$Emissions, by=list(Year=NEI$year), FUN=sum, na.rm=TRUE)
   ##Calculate a smooting spline
   SS1 <- smooth.spline(tby$Year, tby$x, spar=0.35)
   ##Now plot the results
