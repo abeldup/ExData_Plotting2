@@ -3,6 +3,7 @@
 ## - Reads the PM2.5 emissions data into data frame NEI
 ## - Reads the source classification code lookup table
 ## Parameters: NA
+## Returns: NEI
 #######################################################################################################################
 
 readSourceData <- function() {

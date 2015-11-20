@@ -1,8 +1,8 @@
 #######################################################################################################################
-## Function makePlot5 performs the following 
+## Function makePlot6 performs the following 
 ##  - Calls the function to download and unzip the data
 ##  - Calls the function to read the data 
-##  - Creates a subset of data for vehicle transport, for Baltimore, Maryland
+##  - Creates a subset of data for vehicle transport, for Baltimore, Maryland and Los Angeles County, California
 ##  - Summarizes the subset by year
 ##  - Activates the PNG output device and generates the plot
 ##  - Closes the PNG output device
@@ -11,10 +11,9 @@
 ## Returns: NEI (so that it can be re-used)
 #######################################################################################################################
 
-makePlot5 <- function(pwd, pPNG = TRUE) {
+makePlot6 <- function(pwd, pPNG = TRUE) {
   
-  library(graphics)
-  library(grDevices)
+  library(ggplot2)
   
   if (!getwd() == pwd) {
     setwd(pwd)
@@ -31,26 +30,30 @@ makePlot5 <- function(pwd, pPNG = TRUE) {
   ##Create a subset of SCC values for vehicular transport
   veh <- grepl("Vehicle|Transportation|highway", SCC$SCC.Level.Two, fixed=FALSE)
   SCC_veh <- subset(SCC, veh, c("SCC","Short.Name","SCC.Level.One","SCC.Level.Two"))
-  ##Create a subset of NEI measurements for vehicular transport, for Baltimore, Maryland
-  NEI_vehBM <- NEI[which((NEI$SCC %in% SCC_veh$SCC) & 
-                         (NEI$fips == "24510")), ]
+  ##Create a subset of NEI measurements for vehicular transport, 
+  ##for Baltimore, Maryland and Los Angeles County, California
+  NEI_vehBMLA <- NEI[which((NEI$SCC %in% SCC_veh$SCC) & 
+                           (NEI$fips%in% c("24510", "06037"))), ]
   ##Summarize the PM2.5 emissions by year
-  tby_vehBM <- aggregate(NEI_vehBM$Emissions, by=list(Year=NEI_vehBM$year), FUN=sum, na.rm=TRUE)
-  ##Calculate a smooting spline
-  SS5 <- smooth.spline(tby_vehBM$Year, tby_vehBM$x, spar=0.35)
+  tby_vehBMLA <- aggregate(NEI_vehBMLA$Emissions, 
+                           by=list(Year=NEI_vehBMLA$year,fips=NEI_vehBMLA$fips), 
+                           FUN=sum, na.rm=TRUE)
+  ##Name the cities
+  tby_vehBMLA$City <- ifelse(tby_vehBMLA$fips == "24510", "Baltimore", "Los Angeles")
   ##Initialize the PNG device
   if (pPNG == TRUE) {
-    png(filename = "plot5.png",
-        width = 480, height = 480, 
+    png(filename = "plot6.png",
+        width = 720, height = 480, 
         units = "px", pointsize = 12,
         bg = "white")
   }
   ##Now plot the results
-  plot(tby_vehBM, type="l", col="Blue", main="Total Vehicular Emissions for Baltimore, Maryland", 
-       ylab="PM2.5 Emissions (tons)", xlab="Year", xlim=c(1998, 2010))
-  points(tby_vehBM, pch=10)
-  lines(SS5, col="Black", lty="dotdash")
-  legend("topright", c("PM2.5","Trend"), lty=c(1,5), col=c("Blue","Black"))
+  qp = qplot(y=x, x=Year, data=tby_vehBMLA, color=City, 
+             geom=c("point", "smooth"), method="lm", 
+             ylab="PM2.5 Emissions (tons)",
+             main="Total Vehicular Emissions for Baltimore and Los Angeles") +
+    coord_cartesian(ylim = c(0, 10000))
+  print(qp)
   ##Close the PNG device
   if (pPNG == TRUE) {
     dev.off()  

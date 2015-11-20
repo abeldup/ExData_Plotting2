@@ -6,6 +6,7 @@
 ##  - Closes the PNG output device
 ## Parameters: pwd = the working directory
 ##             pPNG = generate the PNG output
+## Returns: NEI (so that it can be re-used)
 #######################################################################################################################
 
 makePlot1 <- function(pwd, pPNG = TRUE) {

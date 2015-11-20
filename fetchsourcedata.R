@@ -4,6 +4,7 @@
 ##  - Downloads the zipped data file 
 ##  - Unzips the data file
 ## Parameters: NA
+## Returns: NA
 #######################################################################################################################
 
 fetchSourceData <- function() {
